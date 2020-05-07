@@ -1,26 +1,19 @@
 package com.kaizen.movie
 
-import org.http4s.HttpApp
-import org.http4s.server.blaze.BlazeServerBuilder
+import caliban.Http4sAdapter
+import zio.blocking.Blocking
 import zio.interop.catz._
-import zio.{App, RIO, ZEnv, ZIO}
-
-import scala.concurrent.ExecutionContext.global
+import zio.{App, Runtime, URIO, ZEnv, ZIO}
 
 object Main extends App {
-  val server: ZIO[ZEnv, Throwable, Unit] =
-    ZIO.runtime[ZEnv].flatMap { implicit rte =>
-      BlazeServerBuilder[RIO[ZEnv, *]](global)
-        .withNio2(true)
-        .bindHttp(8080, "localhost")
-        .withHttpApp(HttpApp.notFound)
-        .serve
-        .compile
-        .drain
-    }
+  override def run(args: List[String]): URIO[ZEnv, Int] = {
+    for {
+      implicit0(rte: Runtime[ZEnv]) <- ZIO.runtime[ZEnv]
 
-  override def run(args: List[String]): ZIO[ZEnv, Nothing, Int] =
-    server
-      .as(0)
-      .orDie
+      graphqlInterpreter            <- graphql.api.interpreter.orDie
+      graphqlRoute                   = Http4sAdapter.makeHttpService(graphqlInterpreter)
+
+      _                             <- Http.server(graphqlRoute).orDie
+    } yield 0
+  }
 }
