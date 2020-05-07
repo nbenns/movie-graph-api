@@ -17,7 +17,7 @@ object Http {
 
       routes   = Router[F] (
                   "/api/graphql" -> gqlRoute,
-                  "/graphiql" -> Kleisli.liftF(StaticFile.fromResource("/graphiql.html", blocker, None))
+                  "/graphiql"    -> Kleisli.liftF(StaticFile.fromResource("/graphiql.html", blocker, None))
                 )
 
       _       <- BlazeServerBuilder[F] (global)

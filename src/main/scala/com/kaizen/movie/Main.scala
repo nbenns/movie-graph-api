@@ -1,7 +1,6 @@
 package com.kaizen.movie
 
 import caliban.Http4sAdapter
-import zio.blocking.Blocking
 import zio.interop.catz._
 import zio.{App, Runtime, URIO, ZEnv, ZIO}
 
