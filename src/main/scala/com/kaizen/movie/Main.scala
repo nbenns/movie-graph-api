@@ -9,10 +9,11 @@ object Main extends App {
   override def run(args: List[String]): URIO[ZEnv, Int] = {
     for {
       implicit0(rte: Runtime[ZEnv]) <- ZIO.runtime[ZEnv]
-      blockingEC                    <- ZIO.access[Blocking](_.get.blockingExecutor.asEC)
+
       graphqlInterpreter            <- graphql.api.interpreter.orDie
       graphqlRoute                   = Http4sAdapter.makeHttpService(graphqlInterpreter)
-      _                             <- Http.server(blockingEC, graphqlRoute).orDie
+
+      _                             <- Http.server(graphqlRoute).orDie
     } yield 0
   }
 }
