@@ -6,7 +6,7 @@ import com.kaizen.api.actor.repository.ActorRepository
 import com.kaizen.api.movie.controller.MovieController
 import com.kaizen.api.movie.repository.MovieRepository
 import zio.interop.catz._
-import zio.{App, Layer, Runtime, URIO, ZEnv, ZIO, ZLayer}
+import zio.{App, Runtime, URIO, ZEnv, ZIO, ZLayer}
 
 object Main extends App {
   val dependencies: ZLayer[Any, Nothing, MovieController with ActorController] =
