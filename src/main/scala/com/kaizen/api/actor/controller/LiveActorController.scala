@@ -13,15 +13,15 @@ class LiveActorController(actorRepository: ActorRepository.Service) extends Acto
   override def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, Actor] =
     for {
       id    <- ZQuery.fromEffect(nextLong)
-      actor  = Actor(id, addActor.name)
+      actor = Actor(id, addActor.name)
       _     <- actorRepository.update(actor)
     } yield actor
 
   override def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, Actor] =
     for {
-      actor <- actorRepository.getById(setActorName.id)
+      actor   <- actorRepository.getById(setActorName.id)
       updated = actor.copy(name = setActorName.name)
-      _     <- actorRepository.update(updated)
+      _       <- actorRepository.update(updated)
     } yield updated
 
   override def removeActor(removeActor: RemoveActor): ZQuery[Any, RepositoryError, Unit] =

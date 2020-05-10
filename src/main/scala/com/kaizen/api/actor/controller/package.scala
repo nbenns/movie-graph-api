@@ -3,7 +3,7 @@ package com.kaizen.api.actor
 import com.kaizen.api.RepositoryError
 import com.kaizen.api.actor.repository.ActorRepository
 import zio.random.Random
-import zio.{Has, ZLayer}
+import zio.{ Has, ZLayer }
 import zquery.ZQuery
 
 package object controller {
@@ -11,10 +11,10 @@ package object controller {
 
   sealed trait ActorSchema extends Product with Serializable
 
-  final case class GetActor(id: ActorId) extends ActorSchema
-  final case class AddActor(name: ActorName) extends ActorSchema
+  final case class GetActor(id: ActorId)                      extends ActorSchema
+  final case class AddActor(name: ActorName)                  extends ActorSchema
   final case class SetActorName(id: ActorId, name: ActorName) extends ActorSchema
-  final case class RemoveActor(id: ActorId) extends ActorSchema
+  final case class RemoveActor(id: ActorId)                   extends ActorSchema
 
   object ActorController {
     trait Service {

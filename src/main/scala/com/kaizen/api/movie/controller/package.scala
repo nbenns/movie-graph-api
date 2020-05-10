@@ -3,7 +3,7 @@ package com.kaizen.api.movie
 import com.kaizen.api.RepositoryError
 import com.kaizen.api.movie.repository.MovieRepository
 import zio.random.Random
-import zio.{Has, ZLayer}
+import zio.{ Has, ZLayer }
 import zquery.ZQuery
 
 package object controller {
@@ -11,10 +11,10 @@ package object controller {
 
   sealed trait MovieSchema extends Product with Serializable
 
-  final case class GetMovie(id: MovieId) extends MovieSchema
-  final case class AddMovie(title: MovieTitle) extends MovieSchema
+  final case class GetMovie(id: MovieId)                         extends MovieSchema
+  final case class AddMovie(title: MovieTitle)                   extends MovieSchema
   final case class SetMovieTitle(id: MovieId, title: MovieTitle) extends MovieSchema
-  final case class RemoveMovie(id: MovieId) extends MovieSchema
+  final case class RemoveMovie(id: MovieId)                      extends MovieSchema
 
   object MovieController {
     trait Service {

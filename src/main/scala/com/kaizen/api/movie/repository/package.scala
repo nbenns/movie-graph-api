@@ -1,12 +1,12 @@
 package com.kaizen.api.movie
 
 import com.kaizen.api.RepositoryError
-import zio.stm.TMap
 import zio._
-import zquery.{DataSource, Request, ZQuery}
+import zio.stm.TMap
+import zquery.{ DataSource, Request, ZQuery }
 
 package object repository {
-  type MovieRepository = Has[MovieRepository.Service]
+  type MovieRepository     = Has[MovieRepository.Service]
   type MovieRepositoryImpl = Has[MovieRepository.Impl]
 
   final case class GetMovieById(id: MovieId) extends Request[RepositoryError, Movie]
@@ -27,13 +27,12 @@ package object repository {
 
     private[repository] trait Impl {
       val getById: DataSource[Any, GetMovieById]
-      val update:  DataSource[Any, UpdateMovie]
-      val delete:  DataSource[Any, DeleteMovie]
+      val update: DataSource[Any, UpdateMovie]
+      val delete: DataSource[Any, DeleteMovie]
     }
 
-    private lazy val svc: ZLayer[MovieRepositoryImpl, Nothing, MovieRepository] = ZLayer.fromFunction(impl =>
-      new Service(impl.get)
-    )
+    private lazy val svc: ZLayer[MovieRepositoryImpl, Nothing, MovieRepository] =
+      ZLayer.fromFunction(impl => new Service(impl.get))
 
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, MovieRepositoryImpl] =
       ZLayer.fromEffect(

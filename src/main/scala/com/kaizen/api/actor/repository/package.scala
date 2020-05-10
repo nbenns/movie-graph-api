@@ -2,11 +2,11 @@ package com.kaizen.api.actor
 
 import com.kaizen.api.RepositoryError
 import zio.stm.TMap
-import zio.{Has, ZLayer}
-import zquery.{DataSource, Request, ZQuery}
+import zio.{ Has, ZLayer }
+import zquery.{ DataSource, Request, ZQuery }
 
 package object repository {
-  type ActorRepository = Has[ActorRepository.Service]
+  type ActorRepository     = Has[ActorRepository.Service]
   type ActorRepositoryImpl = Has[ActorRepository.Impl]
 
   final case class GetActorById(id: ActorId) extends Request[RepositoryError, Actor]
@@ -27,13 +27,12 @@ package object repository {
 
     private[repository] trait Impl {
       val getById: DataSource[Any, GetActorById]
-      val update:  DataSource[Any, UpdateActor]
-      val delete:  DataSource[Any, DeleteActor]
+      val update: DataSource[Any, UpdateActor]
+      val delete: DataSource[Any, DeleteActor]
     }
 
-    private lazy val svc: ZLayer[ActorRepositoryImpl, Nothing, ActorRepository] = ZLayer.fromFunction(impl =>
-      new Service(impl.get)
-    )
+    private lazy val svc: ZLayer[ActorRepositoryImpl, Nothing, ActorRepository] =
+      ZLayer.fromFunction(impl => new Service(impl.get))
 
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, ActorRepositoryImpl] =
       ZLayer.fromEffect(
