@@ -21,8 +21,8 @@ object Graphql extends GenericSchema[MovieController with ActorController with R
   )
 
   case class Queries(
-    getMovieById: GetMovie => ZQuery[MovieController, RepositoryError, Movie],
-    getActorById: GetActor => ZQuery[ActorController, RepositoryError, Actor]
+    getMovie: GetMovie => ZQuery[MovieController, RepositoryError, Movie],
+    getActor: GetActor => ZQuery[ActorController, RepositoryError, Actor]
   )
 
   private val queries = Queries(
