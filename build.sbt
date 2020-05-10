@@ -7,7 +7,7 @@ scalaVersion := "2.13.2"
 addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
 
-scalacOptions += "-unchecked"
+scalacOptions ++= Seq("-unchecked", "-Ymacro-annotations")
 
 val zioVersion = "1.0.0-RC18-2"
 val calibanVersion = "0.7.7"
@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
   "org.http4s"              %% "http4s-server"             % http4sVersion,
   "org.http4s"              %% "http4s-blaze-server"       % http4sVersion,
   "org.http4s"              %% "http4s-prometheus-metrics" % http4sVersion,
-  "dev.zio"                 %% "zio-test"                  % zioVersion,
+  "dev.zio"                 %% "zio-test"                  % zioVersion       % "test",
   "dev.zio"                 %% "zio-test-sbt"              % zioVersion       % "test",
   "dev.zio"                 %% "zio-test-magnolia"         % zioVersion       % "test",
   "dev.zio"                 %% "zio-test-junit"            % zioVersion       % "test",
