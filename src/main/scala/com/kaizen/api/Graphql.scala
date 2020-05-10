@@ -12,12 +12,12 @@ import zquery.ZQuery
 
 object Graphql extends GenericSchema[MovieController with ActorController with Random] {
   case class Mutations(
-    addMovie: AddMovie => ZQuery[MovieController with Random, RepositoryError, Movie],
-    setMovieTitle: SetMovieTitle => ZQuery[MovieController, RepositoryError, Movie],
-    removeMovie: RemoveMovie => ZQuery[MovieController, RepositoryError, Unit],
-    addActor: AddActor => ZQuery[ActorController with Random, RepositoryError, Actor],
-    setActorName: SetActorName => ZQuery[ActorController, RepositoryError, Actor],
-    removeActor: RemoveActor => ZQuery[ActorController, RepositoryError, Unit]
+    addMovie:      AddMovie      => ZQuery[MovieController with Random, RepositoryError, Movie],
+    setMovieTitle: SetMovieTitle => ZQuery[MovieController,             RepositoryError, Movie],
+    removeMovie:   RemoveMovie   => ZQuery[MovieController,             RepositoryError, Unit],
+    addActor:      AddActor      => ZQuery[ActorController with Random, RepositoryError, Actor],
+    setActorName:  SetActorName  => ZQuery[ActorController,             RepositoryError, Actor],
+    removeActor:   RemoveActor   => ZQuery[ActorController,             RepositoryError, Unit]
   )
 
   case class Queries(
