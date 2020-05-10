@@ -4,14 +4,14 @@ import com.kaizen.api
 import com.kaizen.api.RepositoryError
 import com.kaizen.api.movie.Movie
 import com.kaizen.api.movie.repository.MovieRepository
-import zio.random.{Random, nextLong}
+import zio.random.{ nextLong, Random }
 import zquery.ZQuery
 
 class LiveMovieController(movieRepository: MovieRepository.Service) extends MovieController.Service {
   def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, Movie] =
     for {
       id    <- ZQuery.fromEffect(nextLong)
-      movie  = api.movie.Movie(id, addMovie.title)
+      movie = api.movie.Movie(id, addMovie.title)
       _     <- movieRepository.update(movie)
     } yield movie
 
@@ -21,7 +21,7 @@ class LiveMovieController(movieRepository: MovieRepository.Service) extends Movi
   def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[Any, RepositoryError, Movie] =
     for {
       movie   <- movieRepository.getById(setMovieTitle.id)
-      updated  = movie.copy(title = setMovieTitle.title)
+      updated = movie.copy(title = setMovieTitle.title)
       _       <- movieRepository.update(updated)
     } yield updated
 
