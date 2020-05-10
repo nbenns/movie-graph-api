@@ -1,4 +1,4 @@
-package com.kaizen.movie
+package com.kaizen.api
 
 import cats.data.Kleisli
 import cats.effect.{Blocker, ConcurrentEffect, ContextShift, Timer}
@@ -8,19 +8,19 @@ import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.{HttpRoutes, StaticFile}
 
-import scala.concurrent.ExecutionContext.global
+import scala.concurrent.ExecutionContext
 
 object Http {
-  def server[F[_]: ConcurrentEffect: ContextShift : Timer](gqlRoute: HttpRoutes[F]): F[Unit] = (
+  def server[F[_]: ConcurrentEffect: ContextShift : Timer](gqlRoute: HttpRoutes[F], httpPool: ExecutionContext): F[Unit] = (
     for {
       blocker <- Stream.resource(Blocker[F])
 
       routes   = Router[F] (
                   "/api/graphql" -> gqlRoute,
-                  "/graphiql" -> Kleisli.liftF(StaticFile.fromResource("/graphiql.html", blocker, None))
+                  "/graphiql"    -> Kleisli.liftF(StaticFile.fromResource("/graphiql.html", blocker, None))
                 )
 
-      _       <- BlazeServerBuilder[F] (global)
+      _       <- BlazeServerBuilder[F](httpPool)
                    .withNio2(true)
                    .bindHttp(8080, "localhost")
                    .withHttpApp(routes.orNotFound)
