@@ -13,17 +13,19 @@ object Main extends App {
     (MovieRepository.inMemory >>> MovieController.live) ++
       (ActorRepository.inMemory >>> ActorController.live)
 
+  type ZApp = ZEnv with MovieController with ActorController
+
   override def run(args: List[String]): URIO[ZEnv, Int] =
     (for {
-      implicit0(rte: Runtime[ZEnv]) <- ZIO.runtime[ZEnv]
+      implicit0(rte: Runtime[ZApp]) <- ZIO.runtime[ZApp]
 
       httpExecutionContext = rte.platform.executor.asEC
 
       graphqlInterpreter <- Graphql.api.interpreter
 
-      graphqlInterpreterWithDep = graphqlInterpreter.provideCustomLayer(dependencies)
+      graphqlInterpreterWithDep = graphqlInterpreter
       graphqlRoute              = Http4sAdapter.makeHttpService(graphqlInterpreterWithDep)
 
       _ <- Http.server(graphqlRoute, httpExecutionContext)
-    } yield 0).orDie
+    } yield 0).provideCustomLayer(dependencies).orDie
 }

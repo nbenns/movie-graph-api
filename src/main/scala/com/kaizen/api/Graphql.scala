@@ -7,6 +7,7 @@ import com.kaizen.api.actor.Actor
 import com.kaizen.api.actor.controller._
 import com.kaizen.api.movie.Movie
 import com.kaizen.api.movie.controller._
+import zio.ZEnv
 import zio.random.Random
 import zquery.ZQuery
 
@@ -39,5 +40,5 @@ object Graphql extends GenericSchema[MovieController with ActorController with R
     removeActor
   )
 
-  val api: GraphQL[MovieController with ActorController with Random] = graphQL(RootResolver(queries, mutations))
+  val api: GraphQL[ZEnv with MovieController with ActorController] = graphQL(RootResolver(queries, mutations))
 }
