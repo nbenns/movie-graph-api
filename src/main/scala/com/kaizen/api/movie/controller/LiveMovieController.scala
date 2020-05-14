@@ -10,7 +10,7 @@ import zquery.ZQuery
 class LiveMovieController(movieRepository: MovieRepository.Service) extends MovieController.Service {
   def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, Movie] =
     for {
-      id    <- ZQuery.fromEffect(nextLong)
+      id    <- ZQuery.fromEffect(nextLong(1000000000000000L))
       movie = api.movie.Movie(id, addMovie.title)
       _     <- movieRepository.update(movie)
     } yield movie
