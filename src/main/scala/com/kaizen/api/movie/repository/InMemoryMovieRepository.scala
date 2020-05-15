@@ -11,7 +11,7 @@ class InMemoryMovieRepository(memory: TMap[MovieId, Movie]) extends MovieReposit
       memory
         .get(getMovieById.id)
         .commit
-        .someOrFail(RepositoryError.ItemNotFound(getMovieById.id).asInstanceOf[RepositoryError])
+        .someOrFail[Movie, RepositoryError](RepositoryError.ItemNotFound(getMovieById.id))
     }
 
   override val update: DataSource[Any, UpdateMovie] =

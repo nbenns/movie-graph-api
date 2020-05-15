@@ -11,7 +11,7 @@ class InMemoryActorRepository(memory: TMap[ActorId, Actor]) extends ActorReposit
       memory
         .get(getActorById.id)
         .commit
-        .someOrFail(RepositoryError.ItemNotFound(getActorById.id).asInstanceOf[RepositoryError])
+        .someOrFail[Actor, RepositoryError](RepositoryError.ItemNotFound(getActorById.id))
     }
 
   override val update: DataSource[Any, UpdateActor] =
