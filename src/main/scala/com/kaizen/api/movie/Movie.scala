@@ -1,3 +1,3 @@
 package com.kaizen.api.movie
 
-case class Movie(id: MovieId, title: MovieTitle)
+final case class Movie(id: MovieId, title: MovieTitle)
