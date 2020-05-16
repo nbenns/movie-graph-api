@@ -1,9 +1,11 @@
 package com.kaizen.api.actor
 
 import com.kaizen.api.RepositoryError
+import com.kaizen.api.actedIn.controller.ActedInController
 import com.kaizen.api.actor.repository.ActorRepository
+import com.kaizen.api.movie.controller.MovieController
 import zio.random.Random
-import zio.{ Has, ZLayer }
+import zio.{Has, ZLayer}
 import zquery.ZQuery
 
 package object controller {
@@ -18,9 +20,9 @@ package object controller {
 
   object ActorController {
     trait Service {
-      def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, Actor]
+      def getActor(getActor: GetActor): ZQuery[ActedInController with MovieController, RepositoryError, Actor]
       def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, Actor]
-      def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, Actor]
+      def setActorName(setActorName: SetActorName): ZQuery[ActedInController, RepositoryError, Actor]
       def removeActor(removeActor: RemoveActor): ZQuery[Any, RepositoryError, Unit]
     }
 
@@ -28,13 +30,13 @@ package object controller {
       ZLayer.fromFunction(repo => new LiveActorController(repo.get))
   }
 
-  def getActor(getMovie: GetActor): ZQuery[ActorController, RepositoryError, Actor] =
-    ZQuery.environment[ActorController].flatMap(_.get.getActor(getMovie))
+  def getActor(getActor: GetActor): ZQuery[ActorController with ActedInController with MovieController, RepositoryError, Actor] =
+    ZQuery.environment[ActorController].flatMap(_.get.getActor(getActor))
 
-  def addActor(addMovie: AddActor): ZQuery[ActorController with Random, RepositoryError, Actor] =
-    ZQuery.environment[ActorController].flatMap(_.get.addActor(addMovie))
+  def addActor(addActor: AddActor): ZQuery[ActorController with Random, RepositoryError, Actor] =
+    ZQuery.environment[ActorController].flatMap(_.get.addActor(addActor))
 
-  def setActorName(setActorName: SetActorName): ZQuery[ActorController, RepositoryError, Actor] =
+  def setActorName(setActorName: SetActorName): ZQuery[ActorController with ActedInController, RepositoryError, Actor] =
     ZQuery.environment[ActorController].flatMap(_.get.setActorName(setActorName))
 
   def removeActor(removeActor: RemoveActor): ZQuery[ActorController, RepositoryError, Unit] =

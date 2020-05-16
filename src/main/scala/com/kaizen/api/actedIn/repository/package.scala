@@ -11,23 +11,23 @@ package object repository {
   type ActedInRepository = Has[ActedInRepository.Service]
   type ActedInRepositoryImpl = Has[ActedInRepository.Impl]
 
-  final case class GetActedInById(actorId: ActorId, movieId: MovieId) extends Request[RepositoryError, ActedIn]
-  final case class UpdateActedIn(actedIn: ActedIn) extends Request[RepositoryError, Unit]
-  final case class DeleteActedIn(actedIn: ActedIn) extends Request[RepositoryError, Unit]
-  final case class GetMoviesActedIn(actorId: ActorId) extends Request[RepositoryError, List[ActedIn]]
+  final case class GetActedInById(actorId: ActorId, movieId: MovieId) extends Request[RepositoryError, ActedInData]
+  final case class UpdateActedIn(actedIn: ActedInData) extends Request[RepositoryError, Unit]
+  final case class DeleteActedIn(actedIn: ActedInData) extends Request[RepositoryError, Unit]
+  final case class GetMoviesActedIn(actorId: ActorId) extends Request[RepositoryError, List[ActedInData]]
 
   object ActedInRepository {
     class Service(impl: Impl) {
-      def getActedInById(actorId: ActorId, movieId: MovieId): ZQuery[Any, RepositoryError, ActedIn] =
+      def getActedInById(actorId: ActorId, movieId: MovieId): ZQuery[Any, RepositoryError, ActedInData] =
         ZQuery.fromRequest(GetActedInById(actorId, movieId))(impl.getById)
 
-      def updateActedIn(actedIn: ActedIn): ZQuery[Any, RepositoryError, Unit] =
+      def updateActedIn(actedIn: ActedInData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(UpdateActedIn(actedIn))(impl.update)
 
-      def deleteActedIn(actedIn: ActedIn): ZQuery[Any, RepositoryError, Unit] =
+      def deleteActedIn(actedIn: ActedInData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(DeleteActedIn(actedIn))(impl.delete)
 
-      def getMoviesActedIn(actorId: ActorId): ZQuery[Any, RepositoryError, List[ActedIn]] =
+      def getMoviesActedIn(actorId: ActorId): ZQuery[Any, RepositoryError, List[ActedInData]] =
         ZQuery.fromRequest(GetMoviesActedIn(actorId))(impl.getMoviesActedIn)
     }
 
@@ -44,7 +44,7 @@ package object repository {
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, ActedInRepositoryImpl] =
       ZLayer.fromEffect(
         TMap
-          .empty[(ActorId, MovieId), ActedIn]
+          .empty[(ActorId, MovieId), ActedInData]
           .map(new InMemoryActedInRepository(_))
           .commit
       )

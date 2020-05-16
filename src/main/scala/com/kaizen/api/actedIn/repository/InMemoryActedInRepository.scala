@@ -1,20 +1,20 @@
 package com.kaizen.api.actedIn.repository
 
 import com.kaizen.api.RepositoryError
-import com.kaizen.api.actedIn.ActedIn
+import com.kaizen.api.actedIn.ActedInData
 import com.kaizen.api.actor.ActorId
 import com.kaizen.api.movie.MovieId
 import zio.stm.TMap
 import zquery.DataSource
 
-class InMemoryActedInRepository(memory: TMap[(ActorId, MovieId), ActedIn]) extends ActedInRepository.Impl {
+class InMemoryActedInRepository(memory: TMap[(ActorId, MovieId), ActedInData]) extends ActedInRepository.Impl {
 
   override val getById: DataSource[Any, GetActedInById] =
     DataSource.fromFunctionM("getActedInById") { getActedIn =>
       memory
         .get((getActedIn.actorId, getActedIn.movieId))
         .commit
-        .someOrFail[ActedIn, RepositoryError](RepositoryError.ItemNotFound((getActedIn.actorId, getActedIn.movieId)))
+        .someOrFail[ActedInData, RepositoryError](RepositoryError.ItemNotFound((getActedIn.actorId, getActedIn.movieId)))
     }
 
   override val update: DataSource[Any, UpdateActedIn] =

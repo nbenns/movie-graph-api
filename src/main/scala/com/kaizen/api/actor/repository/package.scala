@@ -9,19 +9,19 @@ package object repository {
   type ActorRepository     = Has[ActorRepository.Service]
   type ActorRepositoryImpl = Has[ActorRepository.Impl]
 
-  final case class GetActorById(id: ActorId) extends Request[RepositoryError, Actor]
-  final case class UpdateActor(movie: Actor) extends Request[RepositoryError, Unit]
-  final case class DeleteActor(movie: Actor) extends Request[RepositoryError, Unit]
+  final case class GetActorById(id: ActorId) extends Request[RepositoryError, ActorData]
+  final case class UpdateActor(movie: ActorData) extends Request[RepositoryError, Unit]
+  final case class DeleteActor(movie: ActorData) extends Request[RepositoryError, Unit]
 
   object ActorRepository {
     class Service(impl: Impl) {
-      def getById(id: ActorId): ZQuery[Any, RepositoryError, Actor] =
+      def getById(id: ActorId): ZQuery[Any, RepositoryError, ActorData] =
         ZQuery.fromRequest(GetActorById(id))(impl.getById)
 
-      def update(actor: Actor): ZQuery[Any, RepositoryError, Unit] =
+      def update(actor: ActorData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(UpdateActor(actor))(impl.update)
 
-      def delete(actor: Actor): ZQuery[Any, RepositoryError, Unit] =
+      def delete(actor: ActorData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(DeleteActor(actor))(impl.delete)
     }
 
@@ -37,7 +37,7 @@ package object repository {
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, ActorRepositoryImpl] =
       ZLayer.fromEffect(
         TMap
-          .empty[ActorId, Actor]
+          .empty[ActorId, ActorData]
           .map(new InMemoryActorRepository(_))
           .commit
       )

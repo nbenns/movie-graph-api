@@ -1,17 +1,17 @@
 package com.kaizen.api.actor.repository
 
 import com.kaizen.api.RepositoryError
-import com.kaizen.api.actor.{Actor, ActorId}
+import com.kaizen.api.actor.{ActorData, ActorId}
 import zio.stm.TMap
 import zquery.DataSource
 
-class InMemoryActorRepository(memory: TMap[ActorId, Actor]) extends ActorRepository.Impl {
+class InMemoryActorRepository(memory: TMap[ActorId, ActorData]) extends ActorRepository.Impl {
   override val getById: DataSource[Any, GetActorById] =
     DataSource.fromFunctionM("getActorById") { getActorById =>
       memory
         .get(getActorById.id)
         .commit
-        .someOrFail[Actor, RepositoryError](RepositoryError.ItemNotFound(getActorById.id))
+        .someOrFail[ActorData, RepositoryError](RepositoryError.ItemNotFound(getActorById.id))
     }
 
   override val update: DataSource[Any, UpdateActor] =
