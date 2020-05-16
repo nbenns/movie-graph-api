@@ -15,6 +15,7 @@ package object repository {
   final case class UpdateActedIn(actedIn: ActedInData) extends Request[RepositoryError, Unit]
   final case class DeleteActedIn(actedIn: ActedInData) extends Request[RepositoryError, Unit]
   final case class GetMoviesActedIn(actorId: ActorId) extends Request[RepositoryError, List[ActedInData]]
+  final case class CountMoviesActedIn(actorId: ActorId) extends Request[RepositoryError, Long]
 
   object ActedInRepository {
     class Service(impl: Impl) {
@@ -29,6 +30,9 @@ package object repository {
 
       def getMoviesActedIn(actorId: ActorId): ZQuery[Any, RepositoryError, List[ActedInData]] =
         ZQuery.fromRequest(GetMoviesActedIn(actorId))(impl.getMoviesActedIn)
+
+      def countMoviesActedIn(actorId: ActorId): ZQuery[Any, RepositoryError, Long] =
+        ZQuery.fromRequest(CountMoviesActedIn(actorId))(impl.countMoviesActedIn)
     }
 
     private[repository] trait Impl {
@@ -36,6 +40,7 @@ package object repository {
       val update: DataSource[Any, UpdateActedIn]
       val delete: DataSource[Any, DeleteActedIn]
       val getMoviesActedIn: DataSource[Any, GetMoviesActedIn]
+      val countMoviesActedIn: DataSource[Any, CountMoviesActedIn]
     }
 
     private lazy val svc: ZLayer[ActedInRepositoryImpl, Nothing, ActedInRepository] =

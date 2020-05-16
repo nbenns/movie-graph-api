@@ -27,4 +27,7 @@ class LiveActedInController(repo: ActedInRepository.Service) extends ActedInCont
       list     <- repo.getMoviesActedIn(getMoviesActedIn.actorId)
       actedIns = list.map(d => ActedIn(d.actorId, getMovie(GetMovie(d.movieId))))
     } yield actedIns
+
+  override def countMoviesActedIn(countMoviesActedIn: CountMoviesActedIn): ZQuery[Any, RepositoryError, Long] =
+    repo.countMoviesActedIn(countMoviesActedIn.actorId)
 }

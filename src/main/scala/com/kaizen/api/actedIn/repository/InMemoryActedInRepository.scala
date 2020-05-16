@@ -46,4 +46,12 @@ class InMemoryActedInRepository(memory: TMap[(ActorId, MovieId), ActedInData]) e
         .map(_.filter(_.actorId == getMoviesActedIn.actorId))
         .commit
     }
+  override val countMoviesActedIn: DataSource[Any, CountMoviesActedIn] =
+    DataSource.fromFunctionM("countMoviesActedIn") { countMoviesActedIn =>
+      memory
+        .values
+        .map(_.filter(_.actorId == countMoviesActedIn.actorId))
+        .map(_.length.toLong)
+        .commit
+    }
 }
