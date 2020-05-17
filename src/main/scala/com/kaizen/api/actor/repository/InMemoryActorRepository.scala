@@ -1,7 +1,7 @@
 package com.kaizen.api.actor.repository
 
 import com.kaizen.api.RepositoryError
-import com.kaizen.api.actor.{ActorData, ActorId}
+import com.kaizen.api.actor.ActorId
 import zio.stm.TMap
 import zquery.DataSource
 

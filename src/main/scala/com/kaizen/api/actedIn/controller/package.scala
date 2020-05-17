@@ -4,7 +4,6 @@ import com.kaizen.api.RepositoryError
 import com.kaizen.api.actedIn.repository.ActedInRepository
 import com.kaizen.api.actor.ActorId
 import com.kaizen.api.movie.MovieId
-import com.kaizen.api.movie.controller.MovieController
 import zio.{Has, ZLayer}
 import zquery.ZQuery
 
@@ -21,10 +20,10 @@ package object controller {
 
   object ActedInController {
     trait Service {
-      def getActedIn(getActedIn: GetActedIn): ZQuery[MovieController, RepositoryError, ActedIn]
-      def addActedIn(addActedIn: AddActedIn): ZQuery[MovieController, RepositoryError, ActedIn]
+      def getActedIn(getActedIn: GetActedIn): ZQuery[Any, RepositoryError, ActedIn]
+      def addActedIn(addActedIn: AddActedIn): ZQuery[Any, RepositoryError, ActedIn]
       def removeActedIn(removeActedIn: RemoveActedIn): ZQuery[Any, RepositoryError, Unit]
-      def getMoviesActedIn(getMoviesActedIn: GetMoviesActedIn): ZQuery[MovieController, RepositoryError, List[ActedIn]]
+      def getMoviesActedIn(getMoviesActedIn: GetMoviesActedIn): ZQuery[Any, RepositoryError, List[ActedIn]]
       def countMoviesActedIn(countMoviesActedIn: CountMoviesActedIn): ZQuery[Any, RepositoryError, Long]
     }
 
@@ -32,16 +31,16 @@ package object controller {
       ZLayer.fromFunction(repo => new LiveActedInController(repo.get))
   }
 
-  def getActedIn(getActedIn: GetActedIn): ZQuery[ActedInController with MovieController, RepositoryError, ActedIn] =
+  def getActedIn(getActedIn: GetActedIn): ZQuery[ActedInController, RepositoryError, ActedIn] =
     ZQuery.environment[ActedInController].flatMap(_.get.getActedIn(getActedIn))
 
-  def addActedIn(addActedIn: AddActedIn): ZQuery[ActedInController with MovieController, RepositoryError, ActedIn] =
+  def addActedIn(addActedIn: AddActedIn): ZQuery[ActedInController, RepositoryError, ActedIn] =
     ZQuery.environment[ActedInController].flatMap(_.get.addActedIn(addActedIn))
 
   def removeActedIn(removeActedIn: RemoveActedIn): ZQuery[ActedInController, RepositoryError, Unit] =
     ZQuery.environment[ActedInController].flatMap(_.get.removeActedIn(removeActedIn))
 
-  def getMoviesActedIn(count: Long)(getMoviesActedIn: GetMoviesActedIn): ZQuery[ActedInController with MovieController, RepositoryError, List[ActedIn]] =
+  def getMoviesActedIn(count: Long)(getMoviesActedIn: GetMoviesActedIn): ZQuery[ActedInController, RepositoryError, List[ActedIn]] =
     ZQuery.environment[ActedInController].flatMap(_.get.getMoviesActedIn(getMoviesActedIn))
 
   def countMoviesActedIn(countMoviesActedIn: CountMoviesActedIn): ZQuery[ActedInController, RepositoryError, Long] =

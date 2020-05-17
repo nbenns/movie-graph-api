@@ -11,11 +11,11 @@ import zquery.ZQuery
 
 object Schema extends GenericSchema[ActedInController with MovieController] {
   private case class Queries(
-    getActedIn: GetActedIn => ZQuery[ActedInController with MovieController, RepositoryError, ActedIn]
+    getActedIn: GetActedIn => ZQuery[ActedInController, RepositoryError, ActedIn]
   )
 
   private case class Mutations(
-    addActedIn: AddActedIn => ZQuery[ActedInController with MovieController, RepositoryError, ActedIn],
+    addActedIn: AddActedIn => ZQuery[ActedInController, RepositoryError, ActedIn],
     removeActedIn: RemoveActedIn => ZQuery[ActedInController, RepositoryError, Unit]
   )
 

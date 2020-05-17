@@ -13,12 +13,12 @@ import zquery.ZQuery
 
 object Schema extends GenericSchema[ActorController with ActedInController with MovieController with Random] {
   private case class Queries(
-    getActor: GetActor => ZQuery[ActorController with ActedInController with MovieController, RepositoryError, Actor]
+    getActor: GetActor => ZQuery[ActorController, RepositoryError, Actor]
   )
 
   private case class Mutations(
     addActor: AddActor => ZQuery[ActorController with Random, RepositoryError, Actor],
-    setActorName: SetActorName => ZQuery[ActorController with ActedInController, RepositoryError, Actor],
+    setActorName: SetActorName => ZQuery[ActorController, RepositoryError, Actor],
     removeActor: RemoveActor => ZQuery[ActorController, RepositoryError, Unit]
   )
 
@@ -32,5 +32,6 @@ object Schema extends GenericSchema[ActorController with ActedInController with 
     removeActor
   )
 
-  val api: GraphQL[ZEnv with ActorController with ActedInController with MovieController with Random] = graphQL(RootResolver(queries, mutations))
+  val api: GraphQL[ZEnv with ActorController with ActedInController with MovieController with Random] =
+    graphQL(RootResolver(queries, mutations))
 }

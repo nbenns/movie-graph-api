@@ -1,4 +1,4 @@
-package com.kaizen.api.actedIn
+package com.kaizen.api.actedIn.repository
 
 import com.kaizen.api.actor.ActorId
 import com.kaizen.api.movie.MovieId
