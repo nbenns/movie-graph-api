@@ -8,11 +8,11 @@ import com.kaizen.api.internal.actor.controller.ActorController
 import com.kaizen.api.internal.actor.repository.ActorRepository
 import com.kaizen.api.internal.movie.controller.MovieController
 import com.kaizen.api.internal.movie.repository.MovieRepository
-import zio.{App, Runtime, URIO, ZEnv, ZIO, ZLayer}
 import zio.interop.catz._
+import zio.{App, Runtime, URIO, ZEnv, ZIO}
 
 object Main extends App {
-  val dependencies: ZLayer[Any, Nothing, Controllers] =
+  private val dependencies =
     (MovieRepository.inMemory >>> MovieController.live) ++
       (ActorRepository.inMemory >>> ActorController.live) ++
       (ActedInRepository.inMemory >>> ActedInController.live)
@@ -21,13 +21,11 @@ object Main extends App {
     (for {
       implicit0(rte: Runtime[ZAppEnv]) <- ZIO.runtime[ZAppEnv]
 
-      httpExecutionContext = rte.platform.executor.asEC
+      httpExecutionContext       = rte.platform.executor.asEC
+      graphqlInterpreter        <- Schema.api.interpreter
+      graphqlInterpreterWithDep  = graphqlInterpreter
 
-      graphqlInterpreter <- Schema.api.interpreter
-
-      graphqlInterpreterWithDep = graphqlInterpreter
-      graphqlRoute = Http4sAdapter.makeHttpService(graphqlInterpreterWithDep)
-
-      _ <- Http.server[ZApp](graphqlRoute, httpExecutionContext)
+      graphqlRoute               = Http4sAdapter.makeHttpService(graphqlInterpreterWithDep)
+      _                         <- Http.server[ZApp](graphqlRoute, httpExecutionContext)
     } yield 0).provideCustomLayer(dependencies).orDie
 }

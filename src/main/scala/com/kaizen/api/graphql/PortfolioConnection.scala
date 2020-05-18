@@ -5,9 +5,9 @@ import com.kaizen.api.internal.actedIn.controller.ActedInController
 import com.kaizen.api.internal.movie.controller.MovieController
 import zquery.ZQuery
 
-final case class ActedInConnection(
+final case class PortfolioConnection(
   total: ZQuery[ActedInController, RepositoryError, Long],
   before: Option[String],
   after: Option[String],
-  edges: ZQuery[ActedInController with MovieController, RepositoryError, List[ActedIn]]
+  movies: ZQuery[ActedInController with MovieController, RepositoryError, List[ActedIn]]
 )

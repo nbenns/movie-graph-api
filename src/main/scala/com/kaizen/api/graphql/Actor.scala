@@ -7,7 +7,7 @@ import com.kaizen.api.graphql
 final case class Actor(
   id: ActorId,
   name: ActorName,
-  actedIn: PageParams => ActedInConnection
+  portfolio: PageParams => PortfolioConnection
 )
 
 object Actor {
@@ -16,7 +16,7 @@ object Actor {
       data.id,
       data.name,
       { pageParams =>
-        graphql.ActedInConnection(
+        PortfolioConnection(
           countMoviesActedIn(CountMoviesActedIn(data.id)),
           None,
           None,
