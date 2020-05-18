@@ -1,6 +1,6 @@
 package com.kaizen.api.graphql
 
-import com.kaizen.api.internal.movie._
+import com.kaizen.api.services.movie._
 
 final case class Movie(id: MovieId, title: MovieTitle)
 

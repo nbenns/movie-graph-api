@@ -1,9 +1,9 @@
-package com.kaizen.api.internal.actor
+package com.kaizen.api.services.actor
 
-import com.kaizen.api.internal.actedIn.controller.ActedInController
-import com.kaizen.api.internal.actor.repository.ActorRepository
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.movie.controller.MovieController
+import com.kaizen.api.services.actedIn.controller.ActedInController
+import com.kaizen.api.services.actor.repository.ActorRepository
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.controller.MovieController
 import zio.random.Random
 import zio.{Has, ZLayer}
 import zquery.ZQuery

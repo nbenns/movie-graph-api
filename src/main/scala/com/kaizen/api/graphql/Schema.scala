@@ -4,10 +4,10 @@ import caliban.GraphQL.graphQL
 import caliban.schema.GenericSchema
 import caliban.{GraphQL, RootResolver}
 import com.kaizen.api._
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.actedIn.controller._
-import com.kaizen.api.internal.actor.controller._
-import com.kaizen.api.internal.movie.controller._
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.actedIn.controller._
+import com.kaizen.api.services.actor.controller._
+import com.kaizen.api.services.movie.controller._
 import zio.random.Random
 import zquery.ZQuery
 

@@ -1,8 +1,8 @@
 package com.kaizen
 
-import com.kaizen.api.internal.actedIn.controller.ActedInController
-import com.kaizen.api.internal.actor.controller.ActorController
-import com.kaizen.api.internal.movie.controller.MovieController
+import com.kaizen.api.services.actedIn.controller.ActedInController
+import com.kaizen.api.services.actor.controller.ActorController
+import com.kaizen.api.services.movie.controller.MovieController
 import zio.{ZEnv, ZIO}
 
 package object api {

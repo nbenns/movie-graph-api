@@ -1,3 +1,3 @@
-package com.kaizen.api.internal.actor
+package com.kaizen.api.services.actor
 
 final case class ActorData(id: ActorId, name: ActorName)

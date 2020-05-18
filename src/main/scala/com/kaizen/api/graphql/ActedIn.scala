@@ -1,10 +1,10 @@
 package com.kaizen.api.graphql
 
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.actedIn._
-import com.kaizen.api.internal.actor.ActorId
-import com.kaizen.api.internal.movie.MovieData
-import com.kaizen.api.internal.movie.controller._
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.actedIn._
+import com.kaizen.api.services.actor.ActorId
+import com.kaizen.api.services.movie.MovieData
+import com.kaizen.api.services.movie.controller._
 import zquery.ZQuery
 
 final case class ActedIn(actorId: ActorId, movie: ZQuery[MovieController, RepositoryError, MovieData])

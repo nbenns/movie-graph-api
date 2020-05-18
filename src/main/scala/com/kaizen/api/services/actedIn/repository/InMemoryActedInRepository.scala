@@ -1,9 +1,9 @@
-package com.kaizen.api.internal.actedIn.repository
+package com.kaizen.api.services.actedIn.repository
 
-import com.kaizen.api.internal.actedIn.ActedInData
-import com.kaizen.api.internal.actor.ActorId
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.movie.MovieId
+import com.kaizen.api.services.actedIn.ActedInData
+import com.kaizen.api.services.actor.ActorId
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.MovieId
 import zio.stm.TMap
 import zquery.DataSource
 

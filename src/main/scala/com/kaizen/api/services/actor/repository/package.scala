@@ -1,6 +1,6 @@
-package com.kaizen.api.internal.actor
+package com.kaizen.api.services.actor
 
-import com.kaizen.api.internal.RepositoryError
+import com.kaizen.api.services.RepositoryError
 import zio.stm.TMap
 import zio.{Has, ZLayer}
 import zquery.{DataSource, Request, ZQuery}

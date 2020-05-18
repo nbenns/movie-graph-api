@@ -1,4 +1,4 @@
-package com.kaizen.api.internal
+package com.kaizen.api.services
 
 package object movie {
   type MovieId    = Long

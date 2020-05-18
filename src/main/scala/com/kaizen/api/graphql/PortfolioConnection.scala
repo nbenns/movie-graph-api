@@ -1,8 +1,8 @@
 package com.kaizen.api.graphql
 
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.actedIn.controller.ActedInController
-import com.kaizen.api.internal.movie.controller.MovieController
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.actedIn.controller.ActedInController
+import com.kaizen.api.services.movie.controller.MovieController
 import zquery.ZQuery
 
 final case class PortfolioConnection(

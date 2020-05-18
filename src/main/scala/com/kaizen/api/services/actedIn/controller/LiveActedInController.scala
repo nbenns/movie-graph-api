@@ -1,9 +1,9 @@
-package com.kaizen.api.internal.actedIn.controller
+package com.kaizen.api.services.actedIn.controller
 
-import com.kaizen.api.internal.actedIn.ActedInData
-import com.kaizen.api.internal.actedIn.repository.ActedInRepository
-import com.kaizen.api.internal.actedIn
-import com.kaizen.api.internal.RepositoryError
+import com.kaizen.api.services.actedIn.ActedInData
+import com.kaizen.api.services.actedIn.repository.ActedInRepository
+import com.kaizen.api.services.actedIn
+import com.kaizen.api.services.RepositoryError
 import zquery.ZQuery
 
 class LiveActedInController(repo: ActedInRepository.Service) extends ActedInController.Service {

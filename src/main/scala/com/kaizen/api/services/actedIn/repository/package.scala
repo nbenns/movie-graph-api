@@ -1,8 +1,8 @@
-package com.kaizen.api.internal.actedIn
+package com.kaizen.api.services.actedIn
 
-import com.kaizen.api.internal.actor.ActorId
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.movie.MovieId
+import com.kaizen.api.services.actor.ActorId
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.MovieId
 import zio.stm.TMap
 import zio.{Has, ZLayer}
 import zquery.{DataSource, Request, ZQuery}

@@ -1,8 +1,8 @@
-package com.kaizen.api.internal.actor.controller
+package com.kaizen.api.services.actor.controller
 
-import com.kaizen.api.internal.actor.ActorData
-import com.kaizen.api.internal.actor.repository.ActorRepository
-import com.kaizen.api.internal.RepositoryError
+import com.kaizen.api.services.actor.ActorData
+import com.kaizen.api.services.actor.repository.ActorRepository
+import com.kaizen.api.services.RepositoryError
 import zio.random._
 import zquery.ZQuery
 

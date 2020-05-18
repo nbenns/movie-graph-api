@@ -1,6 +1,6 @@
-package com.kaizen.api.internal.movie
+package com.kaizen.api.services.movie
 
-import com.kaizen.api.internal.RepositoryError
+import com.kaizen.api.services.RepositoryError
 import zio._
 import zio.stm.TMap
 import zquery.{DataSource, Request, ZQuery}

@@ -1,7 +1,7 @@
-package com.kaizen.api.internal.actor.repository
+package com.kaizen.api.services.actor.repository
 
-import com.kaizen.api.internal.actor.{ActorData, ActorId}
-import com.kaizen.api.internal.RepositoryError
+import com.kaizen.api.services.actor.{ActorData, ActorId}
+import com.kaizen.api.services.RepositoryError
 import zio.stm.TMap
 import zquery.DataSource
 

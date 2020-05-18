@@ -1,4 +1,4 @@
-package com.kaizen.api.internal
+package com.kaizen.api.services
 
 sealed trait RepositoryError extends Throwable with Product with Serializable
 

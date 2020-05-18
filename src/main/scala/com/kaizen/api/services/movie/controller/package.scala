@@ -1,7 +1,7 @@
-package com.kaizen.api.internal.movie
+package com.kaizen.api.services.movie
 
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.movie.repository.MovieRepository
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.repository.MovieRepository
 import zio.random.Random
 import zio.{Has, ZLayer}
 import zquery.ZQuery

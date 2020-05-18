@@ -1,8 +1,8 @@
-package com.kaizen.api.internal.movie.controller
+package com.kaizen.api.services.movie.controller
 
-import com.kaizen.api.internal.RepositoryError
-import com.kaizen.api.internal.movie.MovieData
-import com.kaizen.api.internal.movie.repository.MovieRepository
+import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.MovieData
+import com.kaizen.api.services.movie.repository.MovieRepository
 import zio.random.{Random, nextLongBounded}
 import zquery.ZQuery
 
