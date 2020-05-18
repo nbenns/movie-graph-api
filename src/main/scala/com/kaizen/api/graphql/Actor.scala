@@ -2,7 +2,6 @@ package com.kaizen.api.graphql
 
 import com.kaizen.api.services.actedIn.controller._
 import com.kaizen.api.services.actor._
-import com.kaizen.api.graphql
 
 final case class Actor(
   id: ActorId,
