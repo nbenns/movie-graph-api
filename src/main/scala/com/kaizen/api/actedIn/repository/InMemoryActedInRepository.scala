@@ -1,6 +1,7 @@
 package com.kaizen.api.actedIn.repository
 
 import com.kaizen.api.RepositoryError
+import com.kaizen.api.actedIn.ActedInData
 import com.kaizen.api.actor.ActorId
 import com.kaizen.api.movie.MovieId
 import zio.stm.TMap

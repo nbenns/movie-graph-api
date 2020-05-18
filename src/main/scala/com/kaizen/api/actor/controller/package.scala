@@ -20,9 +20,9 @@ package object controller {
 
   object ActorController {
     trait Service {
-      def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, Actor]
-      def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, Actor]
-      def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, Actor]
+      def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, ActorData]
+      def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, ActorData]
+      def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, ActorData]
       def removeActor(removeActor: RemoveActor): ZQuery[Any, RepositoryError, Unit]
     }
 
@@ -30,13 +30,13 @@ package object controller {
       ZLayer.fromFunction(repo => new LiveActorController(repo.get))
   }
 
-  def getActor(getActor: GetActor): ZQuery[ActorController, RepositoryError, Actor] =
+  def getActor(getActor: GetActor): ZQuery[ActorController, RepositoryError, ActorData] =
     ZQuery.environment[ActorController].flatMap(_.get.getActor(getActor))
 
-  def addActor(addActor: AddActor): ZQuery[ActorController with Random, RepositoryError, Actor] =
+  def addActor(addActor: AddActor): ZQuery[ActorController with Random, RepositoryError, ActorData] =
     ZQuery.environment[ActorController].flatMap(_.get.addActor(addActor))
 
-  def setActorName(setActorName: SetActorName): ZQuery[ActorController, RepositoryError, Actor] =
+  def setActorName(setActorName: SetActorName): ZQuery[ActorController, RepositoryError, ActorData] =
     ZQuery.environment[ActorController].flatMap(_.get.setActorName(setActorName))
 
   def removeActor(removeActor: RemoveActor): ZQuery[ActorController, RepositoryError, Unit] =

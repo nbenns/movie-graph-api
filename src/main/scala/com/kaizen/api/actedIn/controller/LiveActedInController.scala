@@ -1,34 +1,32 @@
 package com.kaizen.api.actedIn.controller
 
-import com.kaizen.api.RepositoryError
-import com.kaizen.api.actedIn.repository.{ActedInData, ActedInRepository}
-import com.kaizen.api.actedIn.{ActedIn, repository}
+import com.kaizen.api.actedIn.ActedInData
+import com.kaizen.api.actedIn.repository.ActedInRepository
+import com.kaizen.api.{RepositoryError, actedIn}
 import zquery.ZQuery
 
 class LiveActedInController(repo: ActedInRepository.Service) extends ActedInController.Service {
-  override def getActedIn(getActedIn: GetActedIn): ZQuery[Any, RepositoryError, ActedIn] =
+  override def getActedIn(getActedIn: GetActedIn): ZQuery[Any, RepositoryError, ActedInData] =
     repo
       .getActedInById(getActedIn.actorId, getActedIn.movieId)
-      .map(ActedIn.fromActedInData)
 
-  override def addActedIn(addActedIn: AddActedIn): ZQuery[Any, RepositoryError, ActedIn] = {
-    val data = ActedInData(addActedIn.actorId, addActedIn.movieId)
+  override def addActedIn(addActedIn: AddActedIn): ZQuery[Any, RepositoryError, ActedInData] = {
+    val data = actedIn.ActedInData(addActedIn.actorId, addActedIn.movieId)
 
     repo
       .updateActedIn(data)
-      .map(_ => ActedIn.fromActedInData(data))
+      .map(_ => data)
   }
 
   override def removeActedIn(removeActedIn: RemoveActedIn): ZQuery[Any, RepositoryError, Unit] = {
-    val data = repository.ActedInData(removeActedIn.actorId, removeActedIn.movieId)
+    val data = ActedInData(removeActedIn.actorId, removeActedIn.movieId)
 
     repo.deleteActedIn(data)
   }
 
-  override def getMoviesActedIn(getMoviesActedIn: GetMoviesActedIn): ZQuery[Any, RepositoryError, List[ActedIn]] =
+  override def getMoviesActedIn(getMoviesActedIn: GetMoviesActedIn): ZQuery[Any, RepositoryError, List[ActedInData]] =
     repo
       .getMoviesActedIn(getMoviesActedIn.actorId)
-      .map(_.map(ActedIn.fromActedInData))
 
   override def countMoviesActedIn(countMoviesActedIn: CountMoviesActedIn): ZQuery[Any, RepositoryError, Long] =
     repo.countMoviesActedIn(countMoviesActedIn.actorId)

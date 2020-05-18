@@ -9,19 +9,19 @@ package object repository {
   type MovieRepository     = Has[MovieRepository.Service]
   type MovieRepositoryImpl = Has[MovieRepository.Impl]
 
-  final case class GetMovieById(id: MovieId) extends Request[RepositoryError, Movie]
-  final case class UpdateMovie(movie: Movie) extends Request[RepositoryError, Unit]
-  final case class DeleteMovie(movie: Movie) extends Request[RepositoryError, Unit]
+  final case class GetMovieById(id: MovieId) extends Request[RepositoryError, MovieData]
+  final case class UpdateMovie(movie: MovieData) extends Request[RepositoryError, Unit]
+  final case class DeleteMovie(movie: MovieData) extends Request[RepositoryError, Unit]
 
   object MovieRepository {
     class Service(impl: Impl) {
-      def getById(id: MovieId): ZQuery[Any, RepositoryError, Movie] =
+      def getById(id: MovieId): ZQuery[Any, RepositoryError, MovieData] =
         ZQuery.fromRequest(GetMovieById(id))(impl.getById)
 
-      def update(movie: Movie): ZQuery[Any, RepositoryError, Unit] =
+      def update(movie: MovieData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(UpdateMovie(movie))(impl.update)
 
-      def delete(movie: Movie): ZQuery[Any, RepositoryError, Unit] =
+      def delete(movie: MovieData): ZQuery[Any, RepositoryError, Unit] =
         ZQuery.fromRequest(DeleteMovie(movie))(impl.delete)
     }
 
@@ -37,7 +37,7 @@ package object repository {
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, MovieRepositoryImpl] =
       ZLayer.fromEffect(
         TMap
-          .empty[MovieId, Movie]
+          .empty[MovieId, MovieData]
           .map(new InMemoryMovieRepository(_))
           .commit
       )
@@ -45,19 +45,19 @@ package object repository {
     lazy val inMemory: ZLayer[Any, Nothing, MovieRepository] = inMemoryImpl >>> svc
   }
 
-  def getMovieById(id: MovieId): ZQuery[MovieRepository, RepositoryError, Movie] =
+  def getMovieById(id: MovieId): ZQuery[MovieRepository, RepositoryError, MovieData] =
     for {
       hasMovieRepo <- ZQuery.environment[MovieRepository]
       movie        <- hasMovieRepo.get.getById(id)
     } yield movie
 
-  def updateMovie(movie: Movie): ZQuery[MovieRepository, RepositoryError, Unit] =
+  def updateMovie(movie: MovieData): ZQuery[MovieRepository, RepositoryError, Unit] =
     for {
       hasMovieRepo <- ZQuery.environment[MovieRepository]
       _            <- hasMovieRepo.get.update(movie)
     } yield ()
 
-  def deleteMovie(movie: Movie): ZQuery[MovieRepository, RepositoryError, Unit] =
+  def deleteMovie(movie: MovieData): ZQuery[MovieRepository, RepositoryError, Unit] =
     for {
       hasMovieRepo <- ZQuery.environment[MovieRepository]
       _            <- hasMovieRepo.get.delete(movie)

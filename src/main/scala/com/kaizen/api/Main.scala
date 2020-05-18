@@ -24,7 +24,7 @@ object Main extends App {
 
       httpExecutionContext = rte.platform.executor.asEC
 
-      graphqlInterpreter <- (actor.Schema.api |+| movie.Schema.api |+| actedIn.Schema.api).interpreter
+      graphqlInterpreter <- Schema.api.interpreter
 
       graphqlInterpreterWithDep = graphqlInterpreter
       graphqlRoute              = Http4sAdapter.makeHttpService(graphqlInterpreterWithDep)

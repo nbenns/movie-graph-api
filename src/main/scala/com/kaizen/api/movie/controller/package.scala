@@ -18,9 +18,9 @@ package object controller {
 
   object MovieController {
     trait Service {
-      def getMovie(getMovie: GetMovie): ZQuery[Any, RepositoryError, Movie]
-      def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, Movie]
-      def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[Any, RepositoryError, Movie]
+      def getMovie(getMovie: GetMovie): ZQuery[Any, RepositoryError, MovieData]
+      def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, MovieData]
+      def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[Any, RepositoryError, MovieData]
       def removeMovie(removeMovie: RemoveMovie): ZQuery[Any, RepositoryError, Unit]
     }
 
@@ -28,13 +28,13 @@ package object controller {
       ZLayer.fromFunction(mr => new LiveMovieController(mr.get))
   }
 
-  def getMovie(getMovie: GetMovie): ZQuery[MovieController, RepositoryError, Movie] =
+  def getMovie(getMovie: GetMovie): ZQuery[MovieController, RepositoryError, MovieData] =
     ZQuery.environment[MovieController].flatMap(_.get.getMovie(getMovie))
 
-  def addMovie(addMovie: AddMovie): ZQuery[Random with MovieController, RepositoryError, Movie] =
+  def addMovie(addMovie: AddMovie): ZQuery[Random with MovieController, RepositoryError, MovieData] =
     ZQuery.environment[MovieController].flatMap(_.get.addMovie(addMovie))
 
-  def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[MovieController, RepositoryError, Movie] =
+  def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[MovieController, RepositoryError, MovieData] =
     ZQuery.environment[MovieController].flatMap(_.get.setMovieTitle(setMovieTitle))
 
   def removeMovie(removeMovie: RemoveMovie): ZQuery[MovieController, RepositoryError, Unit] =
