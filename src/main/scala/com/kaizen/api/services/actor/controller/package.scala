@@ -27,7 +27,7 @@ package object controller {
     }
 
     val live: ZLayer[ActorRepository, Nothing, ActorController] =
-      ZLayer.fromFunction(repo => new LiveActorController(repo.get))
+      ZLayer.fromService(new LiveActorController(_))
   }
 
   def getActor(getActor: GetActor): ZQuery[ActorController, RepositoryError, ActorData] =

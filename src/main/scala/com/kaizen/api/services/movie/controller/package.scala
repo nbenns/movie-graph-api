@@ -25,7 +25,7 @@ package object controller {
     }
 
     val live: ZLayer[MovieRepository, Nothing, MovieController] =
-      ZLayer.fromFunction(mr => new LiveMovieController(mr.get))
+      ZLayer.fromService(new LiveMovieController(_))
   }
 
   def getMovie(getMovie: GetMovie): ZQuery[MovieController, RepositoryError, MovieData] =
