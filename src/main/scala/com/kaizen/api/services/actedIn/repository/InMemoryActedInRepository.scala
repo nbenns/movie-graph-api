@@ -5,7 +5,7 @@ import com.kaizen.api.services.actor.ActorId
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.MovieId
 import zio.stm.TMap
-import zquery.DataSource
+import zio.query.DataSource
 
 class InMemoryActedInRepository(memory: TMap[(ActorId, MovieId), ActedInData]) extends ActedInRepository.Impl {
 
@@ -46,6 +46,7 @@ class InMemoryActedInRepository(memory: TMap[(ActorId, MovieId), ActedInData]) e
         .map(_.filter(_.actorId == getMoviesActedIn.actorId))
         .commit
     }
+
   override val countMoviesActedIn: DataSource[Any, CountMoviesActedIn] =
     DataSource.fromFunctionM("countMoviesActedIn") { countMoviesActedIn =>
       memory

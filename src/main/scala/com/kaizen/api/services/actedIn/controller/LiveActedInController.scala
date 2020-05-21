@@ -4,19 +4,18 @@ import com.kaizen.api.services.actedIn.ActedInData
 import com.kaizen.api.services.actedIn.repository.ActedInRepository
 import com.kaizen.api.services.actedIn
 import com.kaizen.api.services.RepositoryError
-import zquery.ZQuery
+import zio.query.ZQuery
 
 class LiveActedInController(repo: ActedInRepository.Service) extends ActedInController.Service {
   override def getActedIn(getActedIn: GetActedIn): ZQuery[Any, RepositoryError, ActedInData] =
-    repo
-      .getActedInById(getActedIn.actorId, getActedIn.movieId)
+    repo.getActedInById(getActedIn.actorId, getActedIn.movieId)
 
   override def addActedIn(addActedIn: AddActedIn): ZQuery[Any, RepositoryError, ActedInData] = {
     val data = actedIn.ActedInData(addActedIn.actorId, addActedIn.movieId)
 
     repo
       .updateActedIn(data)
-      .map(_ => data)
+      .as(data)
   }
 
   override def removeActedIn(removeActedIn: RemoveActedIn): ZQuery[Any, RepositoryError, Unit] = {
@@ -26,8 +25,7 @@ class LiveActedInController(repo: ActedInRepository.Service) extends ActedInCont
   }
 
   override def getMoviesActedIn(getMoviesActedIn: GetMoviesActedIn): ZQuery[Any, RepositoryError, List[ActedInData]] =
-    repo
-      .getMoviesActedIn(getMoviesActedIn.actorId)
+    repo.getMoviesActedIn(getMoviesActedIn.actorId)
 
   override def countMoviesActedIn(countMoviesActedIn: CountMoviesActedIn): ZQuery[Any, RepositoryError, Long] =
     repo.countMoviesActedIn(countMoviesActedIn.actorId)

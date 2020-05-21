@@ -4,7 +4,7 @@ import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.MovieData
 import com.kaizen.api.services.movie.repository.MovieRepository
 import zio.random.{Random, nextLongBounded}
-import zquery.ZQuery
+import zio.query.ZQuery
 
 class LiveMovieController(movieRepository: MovieRepository.Service) extends MovieController.Service {
   def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, MovieData] =

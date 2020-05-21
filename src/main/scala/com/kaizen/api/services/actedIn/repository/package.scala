@@ -5,7 +5,7 @@ import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.MovieId
 import zio.stm.TMap
 import zio.{Has, ZLayer}
-import zquery.{DataSource, Request, ZQuery}
+import zio.query.{DataSource, Request, ZQuery}
 
 package object repository {
   type ActedInRepository = Has[ActedInRepository.Service]
@@ -44,7 +44,7 @@ package object repository {
     }
 
     private lazy val svc: ZLayer[ActedInRepositoryImpl, Nothing, ActedInRepository] =
-      ZLayer.fromFunction(impl => new Service(impl.get))
+      ZLayer.fromService(new Service(_))
 
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, ActedInRepositoryImpl] =
       ZLayer.fromEffect(

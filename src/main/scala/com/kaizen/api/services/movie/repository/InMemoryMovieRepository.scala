@@ -3,7 +3,7 @@ package com.kaizen.api.services.movie.repository
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie._
 import zio.stm.TMap
-import zquery.DataSource
+import zio.query.DataSource
 
 class InMemoryMovieRepository(memory: TMap[MovieId, MovieData]) extends MovieRepository.Impl {
   override val getById: DataSource[Any, GetMovieById] =

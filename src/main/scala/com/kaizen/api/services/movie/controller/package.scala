@@ -4,7 +4,7 @@ import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.repository.MovieRepository
 import zio.random.Random
 import zio.{Has, ZLayer}
-import zquery.ZQuery
+import zio.query.ZQuery
 
 package object controller {
   type MovieController = Has[MovieController.Service]

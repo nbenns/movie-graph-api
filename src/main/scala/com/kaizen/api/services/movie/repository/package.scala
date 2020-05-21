@@ -3,7 +3,7 @@ package com.kaizen.api.services.movie
 import com.kaizen.api.services.RepositoryError
 import zio._
 import zio.stm.TMap
-import zquery.{DataSource, Request, ZQuery}
+import zio.query.{DataSource, Request, ZQuery}
 
 package object repository {
   type MovieRepository     = Has[MovieRepository.Service]
@@ -32,7 +32,7 @@ package object repository {
     }
 
     private lazy val svc: ZLayer[MovieRepositoryImpl, Nothing, MovieRepository] =
-      ZLayer.fromFunction(impl => new Service(impl.get))
+      ZLayer.fromService(new Service(_))
 
     private lazy val inMemoryImpl: ZLayer[Any, Nothing, MovieRepositoryImpl] =
       ZLayer.fromEffect(

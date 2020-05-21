@@ -5,7 +5,7 @@ import com.kaizen.api.services.actor.ActorId
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.MovieId
 import zio.{Has, ZLayer}
-import zquery.ZQuery
+import zio.query.ZQuery
 
 package object controller {
   type ActedInController = Has[ActedInController.Service]

@@ -4,7 +4,7 @@ import com.kaizen.api.services.actor.ActorData
 import com.kaizen.api.services.actor.repository.ActorRepository
 import com.kaizen.api.services.RepositoryError
 import zio.random._
-import zquery.ZQuery
+import zio.query.ZQuery
 
 class LiveActorController(actorRepository: ActorRepository.Service) extends ActorController.Service {
   override def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, ActorData] =

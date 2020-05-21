@@ -9,7 +9,7 @@ import com.kaizen.api.services.actedIn.controller._
 import com.kaizen.api.services.actor.controller._
 import com.kaizen.api.services.movie.controller._
 import zio.random.Random
-import zquery.ZQuery
+import zio.query.ZQuery
 
 object Schema extends GenericSchema[ZAppEnv] {
   private case class Queries(

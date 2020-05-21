@@ -1,12 +1,10 @@
 package com.kaizen.api.services.actor
 
-import com.kaizen.api.services.actedIn.controller.ActedInController
-import com.kaizen.api.services.actor.repository.ActorRepository
 import com.kaizen.api.services.RepositoryError
-import com.kaizen.api.services.movie.controller.MovieController
+import com.kaizen.api.services.actor.repository.ActorRepository
+import zio.query.ZQuery
 import zio.random.Random
 import zio.{Has, ZLayer}
-import zquery.ZQuery
 
 package object controller {
   type ActorController = Has[ActorController.Service]

@@ -3,7 +3,7 @@ package com.kaizen.api.services.actor.repository
 import com.kaizen.api.services.actor.{ActorData, ActorId}
 import com.kaizen.api.services.RepositoryError
 import zio.stm.TMap
-import zquery.DataSource
+import zio.query.DataSource
 
 class InMemoryActorRepository(memory: TMap[ActorId, ActorData]) extends ActorRepository.Impl {
   override val getById: DataSource[Any, GetActorById] =

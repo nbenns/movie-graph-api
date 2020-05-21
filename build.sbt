@@ -10,7 +10,7 @@ addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 scalacOptions ++= Seq("-unchecked", "-Ymacro-annotations")
 
 val zioVersion     = "1.0.0-RC19"
-val calibanVersion = "0.7.8"
+val calibanVersion = "0.8.0"
 val http4sVersion  = "0.21.4"
 
 libraryDependencies ++= Seq(
@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
   "dev.zio"               %% "zio"                       % zioVersion,
   "dev.zio"               %% "zio-interop-cats"          % "2.0.0.0-RC12",
   "dev.zio"               %% "zio-config"                % "1.0.0-RC17",
+  "dev.zio"               %% "zio-query"                 % "0.2.0",
   "com.github.ghostdogpr" %% "caliban"                   % calibanVersion,
   "com.github.ghostdogpr" %% "caliban-cats"              % calibanVersion,
   "com.github.ghostdogpr" %% "caliban-http4s"            % calibanVersion,
@@ -26,7 +27,7 @@ libraryDependencies ++= Seq(
   "org.http4s"            %% "http4s-server"             % http4sVersion,
   "org.http4s"            %% "http4s-blaze-server"       % http4sVersion,
   "org.http4s"            %% "http4s-prometheus-metrics" % http4sVersion,
-  "ch.qos.logback"        % "logback-classic"            % "1.2.3",
+  "ch.qos.logback"        %  "logback-classic"           % "1.2.3",
   "dev.zio"               %% "zio-test"                  % zioVersion % Test,
   "dev.zio"               %% "zio-test-sbt"              % zioVersion % Test,
   "dev.zio"               %% "zio-test-magnolia"         % zioVersion % Test,
