@@ -9,7 +9,7 @@ addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 
 scalacOptions ++= Seq("-unchecked", "-Ymacro-annotations")
 
-val zioVersion     = "1.0.0-RC19"
+val zioVersion     = "1.0.0-RC19-2"
 val calibanVersion = "0.8.0"
 val http4sVersion  = "0.21.4"
 
