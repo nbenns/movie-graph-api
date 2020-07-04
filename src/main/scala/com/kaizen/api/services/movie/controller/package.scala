@@ -29,14 +29,14 @@ package object controller {
   }
 
   def getMovie(getMovie: GetMovie): ZQuery[MovieController, RepositoryError, MovieData] =
-    ZQuery.environment[MovieController].flatMap(_.get.getMovie(getMovie))
+    ZQuery.accessM[MovieController](_.get.getMovie(getMovie))
 
-  def addMovie(addMovie: AddMovie): ZQuery[Random with MovieController, RepositoryError, MovieData] =
-    ZQuery.environment[MovieController].flatMap(_.get.addMovie(addMovie))
+  def addMovie(addMovie: AddMovie): ZQuery[MovieController with Random, RepositoryError, MovieData] =
+    ZQuery.accessM[MovieController with Random](_.get.addMovie(addMovie))
 
   def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[MovieController, RepositoryError, MovieData] =
-    ZQuery.environment[MovieController].flatMap(_.get.setMovieTitle(setMovieTitle))
+    ZQuery.accessM[MovieController](_.get.setMovieTitle(setMovieTitle))
 
   def removeMovie(removeMovie: RemoveMovie): ZQuery[MovieController, RepositoryError, Unit] =
-    ZQuery.environment[MovieController].flatMap(_.get.removeMovie(removeMovie))
+    ZQuery.accessM[MovieController](_.get.removeMovie(removeMovie))
 }

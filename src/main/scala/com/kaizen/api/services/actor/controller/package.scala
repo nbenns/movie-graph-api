@@ -29,14 +29,14 @@ package object controller {
   }
 
   def getActor(getActor: GetActor): ZQuery[ActorController, RepositoryError, ActorData] =
-    ZQuery.environment[ActorController].flatMap(_.get.getActor(getActor))
+    ZQuery.accessM[ActorController](_.get.getActor(getActor))
 
   def addActor(addActor: AddActor): ZQuery[ActorController with Random, RepositoryError, ActorData] =
-    ZQuery.environment[ActorController].flatMap(_.get.addActor(addActor))
+    ZQuery.accessM[ActorController with Random](_.get.addActor(addActor))
 
   def setActorName(setActorName: SetActorName): ZQuery[ActorController, RepositoryError, ActorData] =
-    ZQuery.environment[ActorController].flatMap(_.get.setActorName(setActorName))
+    ZQuery.accessM[ActorController](_.get.setActorName(setActorName))
 
   def removeActor(removeActor: RemoveActor): ZQuery[ActorController, RepositoryError, Unit] =
-    ZQuery.environment[ActorController].flatMap(_.get.removeActor(removeActor))
+    ZQuery.accessM[ActorController](_.get.removeActor(removeActor))
 }
