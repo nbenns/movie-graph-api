@@ -1,4 +1,4 @@
-package com.kaizen.api.graphql
+package com.kaizen.api.services.movie.graphql
 
 import com.kaizen.api.services.movie._
 
