@@ -1,6 +1,6 @@
 package com.kaizen.api.graphql
 
-import com.kaizen.api.graphql.datasource.ActedInDataSource
+import com.kaizen.api.graphql.datasource.{ActedInDataSource, MovieDataSource}
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.actedIn.controller.ActedInController
 import com.kaizen.api.services.actor.ActorData

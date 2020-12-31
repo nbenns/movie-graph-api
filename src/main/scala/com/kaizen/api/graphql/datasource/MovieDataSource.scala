@@ -1,11 +1,12 @@
-package com.kaizen.api.services.movie.graphql
+package com.kaizen.api.graphql.datasource
 
+import com.kaizen.api.graphql.{AddMovie, GetMovie, Movie, RemoveMovie, SetMovieTitle}
 import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.movie.{MovieId, MovieTitle}
 import com.kaizen.api.services.movie.controller.MovieController
-import com.kaizen.api.services.movie.{ MovieId, MovieTitle }
-import zio.query.{ DataSource, ZQuery }
+import zio.{Chunk, Has, ZIO}
+import zio.query.{DataSource, ZQuery}
 import zio.random.Random
-import zio.{ Chunk, ZIO }
 
 object MovieDataSource {
   private val getMovieDS: DataSource[MovieController, GetMovie] =
@@ -42,7 +43,7 @@ object MovieDataSource {
   private val batchGetMoviesDS: DataSource[MovieController, GetMovie] =
     DataSource.fromFunctionBatchedM("BatchGetMovies") { chunk =>
       for {
-        mc  <- ZIO.service[MovieController.Service]
+        mc <- ZIO.service[MovieController.Service]
         out <- chunk.mapM(gm => mc.getMovie(gm.id))
       } yield out.map(Movie.fromMovieData)
     }
@@ -53,17 +54,20 @@ object MovieDataSource {
   def getMovie(movieId: MovieId): ZQuery[MovieController, RepositoryError, Movie] =
     getMovie(GetMovie(movieId))
 
+
   def addMovie(addMovie: AddMovie): ZQuery[MovieController with Random, RepositoryError, Movie] =
     ZQuery.fromRequest(addMovie)(addMovieDS)
 
   def addMovie(title: MovieTitle): ZQuery[MovieController with Random, RepositoryError, Movie] =
     addMovie(AddMovie(title))
 
+
   def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[MovieController, RepositoryError, Movie] =
     ZQuery.fromRequest(setMovieTitle)(setMovieTitleDS)
 
   def setMovieTitle(id: MovieId, title: MovieTitle): ZQuery[MovieController, RepositoryError, Movie] =
     setMovieTitle(SetMovieTitle(id, title))
+
 
   def removeMovie(removeMovie: RemoveMovie): ZQuery[MovieController, RepositoryError, Unit] =
     ZQuery.fromRequest(removeMovie)(removeMovieDS)

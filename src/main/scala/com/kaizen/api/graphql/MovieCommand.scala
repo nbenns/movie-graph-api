@@ -1,4 +1,4 @@
-package com.kaizen.api.services.movie.graphql
+package com.kaizen.api.graphql
 
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.{MovieId, MovieTitle}
