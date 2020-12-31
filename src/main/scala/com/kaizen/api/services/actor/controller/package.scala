@@ -2,41 +2,33 @@ package com.kaizen.api.services.actor
 
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.actor.repository.ActorRepository
-import zio.query.ZQuery
 import zio.random.Random
-import zio.{Has, ZLayer}
+import zio.{Has, ZIO, ZLayer}
 
 package object controller {
   type ActorController = Has[ActorController.Service]
 
-  sealed trait ActorSchema extends Product with Serializable
-
-  final case class GetActor(id: ActorId)                      extends ActorSchema
-  final case class AddActor(name: ActorName)                  extends ActorSchema
-  final case class SetActorName(id: ActorId, name: ActorName) extends ActorSchema
-  final case class RemoveActor(id: ActorId)                   extends ActorSchema
-
   object ActorController {
     trait Service {
-      def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, ActorData]
-      def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, ActorData]
-      def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, ActorData]
-      def removeActor(removeActor: RemoveActor): ZQuery[Any, RepositoryError, Unit]
+      def getActor(id: ActorId): ZIO[Any, RepositoryError, ActorData]
+      def addActor(name: ActorName): ZIO[Random, RepositoryError, ActorData]
+      def setActorName(id: ActorId, name: ActorName): ZIO[Any, RepositoryError, ActorData]
+      def removeActor(id: ActorId): ZIO[Any, RepositoryError, Unit]
     }
 
     val live: ZLayer[ActorRepository, Nothing, ActorController] =
       ZLayer.fromService(new LiveActorController(_))
   }
 
-  def getActor(getActor: GetActor): ZQuery[ActorController, RepositoryError, ActorData] =
-    ZQuery.accessM[ActorController](_.get.getActor(getActor))
+  def getActor(id: ActorId): ZIO[ActorController, RepositoryError, ActorData] =
+    ZIO.accessM[ActorController](_.get.getActor(id))
 
-  def addActor(addActor: AddActor): ZQuery[ActorController with Random, RepositoryError, ActorData] =
-    ZQuery.accessM[ActorController with Random](_.get.addActor(addActor))
+  def addActor(name: ActorName): ZIO[ActorController with Random, RepositoryError, ActorData] =
+    ZIO.accessM[ActorController with Random](_.get.addActor(name))
 
-  def setActorName(setActorName: SetActorName): ZQuery[ActorController, RepositoryError, ActorData] =
-    ZQuery.accessM[ActorController](_.get.setActorName(setActorName))
+  def setActorName(id: ActorId, name: ActorName): ZIO[ActorController, RepositoryError, ActorData] =
+    ZIO.accessM[ActorController](_.get.setActorName(id, name))
 
-  def removeActor(removeActor: RemoveActor): ZQuery[ActorController, RepositoryError, Unit] =
-    ZQuery.accessM[ActorController](_.get.removeActor(removeActor))
+  def removeActor(id: ActorId): ZIO[ActorController, RepositoryError, Unit] =
+    ZIO.accessM[ActorController](_.get.removeActor(id))
 }

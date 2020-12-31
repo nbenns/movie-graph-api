@@ -2,29 +2,19 @@ package com.kaizen.api.services.movie.repository
 
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie._
-import zio.stm.TMap
-import zio.query.DataSource
+import zio.stm.{TMap, ZSTM}
 
-class InMemoryMovieRepository(memory: TMap[MovieId, MovieData]) extends MovieRepository.Impl {
-  override val getById: DataSource[Any, GetMovieById] =
-    DataSource.fromFunctionM("getMovieById") { getMovieById =>
+class InMemoryMovieRepository(memory: TMap[MovieId, MovieData]) extends MovieRepository.Service {
+  override def getById(id: MovieId): ZSTM[Any, RepositoryError, MovieData] =
       memory
-        .get(getMovieById.id)
-        .commit
-        .someOrFail[MovieData, RepositoryError](RepositoryError.ItemNotFound(getMovieById.id))
-    }
+        .get(id)
+        .someOrFail[MovieData, RepositoryError](RepositoryError.ItemNotFound(id))
 
-  override val update: DataSource[Any, UpdateMovie] =
-    DataSource.fromFunctionM("updateMovie") { updateMovie =>
+  override def update(movie: MovieData): ZSTM[Any, RepositoryError, Unit] =
       memory
-        .put(updateMovie.movie.id, updateMovie.movie)
-        .commit
-    }
+        .put(movie.id, movie)
 
-  override val delete: DataSource[Any, DeleteMovie] =
-    DataSource.fromFunctionM("deleteMovie") { deleteMovie =>
+  override def delete(movie: MovieData) =
       memory
-        .delete(deleteMovie.movie.id)
-        .commit
-    }
+        .delete(movie.id)
 }

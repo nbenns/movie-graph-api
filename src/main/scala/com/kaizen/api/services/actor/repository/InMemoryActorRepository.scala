@@ -1,30 +1,20 @@
 package com.kaizen.api.services.actor.repository
 
-import com.kaizen.api.services.actor.{ActorData, ActorId}
 import com.kaizen.api.services.RepositoryError
-import zio.stm.TMap
-import zio.query.DataSource
+import com.kaizen.api.services.actor.{ActorData, ActorId}
+import zio.stm.{TMap, ZSTM}
 
-class InMemoryActorRepository(memory: TMap[ActorId, ActorData]) extends ActorRepository.Impl {
-  override val getById: DataSource[Any, GetActorById] =
-    DataSource.fromFunctionM("getActorById") { getActorById =>
+class InMemoryActorRepository(memory: TMap[ActorId, ActorData]) extends ActorRepository.Service {
+  override def getById(id: ActorId): ZSTM[Any, RepositoryError, ActorData] =
       memory
-        .get(getActorById.id)
-        .commit
-        .someOrFail[ActorData, RepositoryError](RepositoryError.ItemNotFound(getActorById.id))
-    }
+        .get(id)
+        .someOrFail(RepositoryError.ItemNotFound(id))
 
-  override val update: DataSource[Any, UpdateActor] =
-    DataSource.fromFunctionM("updateActor") { updateActor =>
+  override def update(actorData: ActorData): ZSTM[Any, Nothing, Unit] =
       memory
-        .put(updateActor.movie.id, updateActor.movie)
-        .commit
-    }
+        .put(actorData.id, actorData)
 
-  override val delete: DataSource[Any, DeleteActor] =
-    DataSource.fromFunctionM("deleteActor") { deleteActor =>
+  override def delete(actorData: ActorData): ZSTM[Any, Nothing, Unit] =
       memory
-        .delete(deleteActor.movie.id)
-        .commit
-    }
+        .delete(actorData.id)
 }

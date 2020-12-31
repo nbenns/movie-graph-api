@@ -1,32 +1,38 @@
 package com.kaizen.api.services.movie.controller
 
 import com.kaizen.api.services.RepositoryError
-import com.kaizen.api.services.movie.MovieData
+import com.kaizen.api.services.movie._
 import com.kaizen.api.services.movie.repository.MovieRepository
+import zio.ZIO
 import zio.random.{Random, nextLongBounded}
-import zio.query.ZQuery
 
 class LiveMovieController(movieRepository: MovieRepository.Service) extends MovieController.Service {
-  def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, MovieData] =
+  def addMovie(title: MovieTitle): ZIO[Random, RepositoryError, MovieData] =
     for {
-      id    <- ZQuery.fromEffect(nextLongBounded(1000000000000000L))
-      movie  = MovieData(id, addMovie.title)
-      _     <- movieRepository.update(movie)
+      id    <- nextLongBounded(1000000000000000L)
+      movie  = MovieData(id, title)
+      _     <- movieRepository.update(movie).commit
     } yield movie
 
-  def getMovie(getMovie: GetMovie): ZQuery[Any, RepositoryError, MovieData] =
-    movieRepository.getById(getMovie.id)
+  def getMovie(id: MovieId): ZIO[Any, RepositoryError, MovieData] =
+    movieRepository
+      .getById(id)
+      .commit
 
-  def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[Any, RepositoryError, MovieData] =
-    for {
-      movie   <- movieRepository.getById(setMovieTitle.id)
-      updated  = movie.copy(title = setMovieTitle.title)
-      _       <- movieRepository.update(updated)
-    } yield updated
+  def setMovieTitle(id: MovieId, title: MovieTitle): ZIO[Any, RepositoryError, MovieData] =
+    (
+      for {
+        movie   <- movieRepository.getById(id)
+        updated  = movie.copy(title = title)
+        _       <- movieRepository.update(updated)
+      } yield updated
+    ).commit
 
-  override def removeMovie(removeMovie: RemoveMovie): ZQuery[Any, RepositoryError, Unit] =
-    for {
-      movie <- movieRepository.getById(removeMovie.id)
-      _     <- movieRepository.delete(movie)
-    } yield ()
+  override def removeMovie(id: MovieId): ZIO[Any, RepositoryError, Unit] =
+    (
+      for {
+        movie <- movieRepository.getById(id)
+        _     <- movieRepository.delete(movie)
+      } yield ()
+    ).commit
 }

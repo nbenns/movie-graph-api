@@ -3,40 +3,33 @@ package com.kaizen.api.services.movie
 import com.kaizen.api.services.RepositoryError
 import com.kaizen.api.services.movie.repository.MovieRepository
 import zio.random.Random
-import zio.{Has, ZLayer}
+import zio.{Has, ZIO, ZLayer}
 import zio.query.ZQuery
 
 package object controller {
   type MovieController = Has[MovieController.Service]
 
-  sealed trait MovieSchema extends Product with Serializable
-
-  final case class GetMovie(id: MovieId)                         extends MovieSchema
-  final case class AddMovie(title: MovieTitle)                   extends MovieSchema
-  final case class SetMovieTitle(id: MovieId, title: MovieTitle) extends MovieSchema
-  final case class RemoveMovie(id: MovieId)                      extends MovieSchema
-
   object MovieController {
     trait Service {
-      def getMovie(getMovie: GetMovie): ZQuery[Any, RepositoryError, MovieData]
-      def addMovie(addMovie: AddMovie): ZQuery[Random, RepositoryError, MovieData]
-      def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[Any, RepositoryError, MovieData]
-      def removeMovie(removeMovie: RemoveMovie): ZQuery[Any, RepositoryError, Unit]
+      def getMovie(id: MovieId): ZIO[Any, RepositoryError, MovieData]
+      def addMovie(title: MovieTitle): ZIO[Random, RepositoryError, MovieData]
+      def setMovieTitle(id: MovieId, title: MovieTitle): ZIO[Any, RepositoryError, MovieData]
+      def removeMovie(id: MovieId): ZIO[Any, RepositoryError, Unit]
     }
 
     val live: ZLayer[MovieRepository, Nothing, MovieController] =
       ZLayer.fromService(new LiveMovieController(_))
   }
 
-  def getMovie(getMovie: GetMovie): ZQuery[MovieController, RepositoryError, MovieData] =
-    ZQuery.accessM[MovieController](_.get.getMovie(getMovie))
+  def getMovie(id: MovieId): ZIO[MovieController, RepositoryError, MovieData] =
+    ZIO.accessM[MovieController](_.get.getMovie(id))
 
-  def addMovie(addMovie: AddMovie): ZQuery[MovieController with Random, RepositoryError, MovieData] =
-    ZQuery.accessM[MovieController with Random](_.get.addMovie(addMovie))
+  def addMovie(title: MovieTitle): ZIO[MovieController with Random, RepositoryError, MovieData] =
+    ZIO.accessM[MovieController with Random](_.get.addMovie(title))
 
-  def setMovieTitle(setMovieTitle: SetMovieTitle): ZQuery[MovieController, RepositoryError, MovieData] =
-    ZQuery.accessM[MovieController](_.get.setMovieTitle(setMovieTitle))
+  def setMovieTitle(id: MovieId, title: MovieTitle): ZIO[MovieController, RepositoryError, MovieData] =
+    ZIO.accessM[MovieController](_.get.setMovieTitle(id, title))
 
-  def removeMovie(removeMovie: RemoveMovie): ZQuery[MovieController, RepositoryError, Unit] =
-    ZQuery.accessM[MovieController](_.get.removeMovie(removeMovie))
+  def removeMovie(id: MovieId): ZIO[MovieController, RepositoryError, Unit] =
+    ZIO.accessM[MovieController](_.get.removeMovie(id))
 }

@@ -1,34 +1,38 @@
 package com.kaizen.api.services.actor.controller
 
-import com.kaizen.api.services.actor.ActorData
-import com.kaizen.api.services.actor.repository.ActorRepository
 import com.kaizen.api.services.RepositoryError
+import com.kaizen.api.services.actor.repository.ActorRepository
+import com.kaizen.api.services.actor.{ActorData, ActorId, ActorName}
+import zio.ZIO
 import zio.random._
-import zio.query.ZQuery
 
 class LiveActorController(actorRepository: ActorRepository.Service) extends ActorController.Service {
-  override def getActor(getActor: GetActor): ZQuery[Any, RepositoryError, ActorData] =
+  override def getActor(id: ActorId) =
     actorRepository
-      .getById(getActor.id)
+      .getById(id)
+      .commit
 
-
-  override def addActor(addActor: AddActor): ZQuery[Random, RepositoryError, ActorData] =
+  override def addActor(name: ActorName): ZIO[Random, RepositoryError, ActorData] =
     for {
-      id    <- ZQuery.fromEffect(nextLongBounded(1000000000000000L))
-      actor  = ActorData(id, addActor.name)
-      _     <- actorRepository.update(actor)
+      id    <- nextLongBounded(1000000000000000L)
+      actor  = ActorData(id, name)
+      _     <- actorRepository.update(actor).commit
     } yield actor
 
-  override def setActorName(setActorName: SetActorName): ZQuery[Any, RepositoryError, ActorData] =
-    for {
-      data    <- actorRepository.getById(setActorName.id)
-      updated  = data.copy(name = setActorName.name)
-      _       <- actorRepository.update(updated)
-    } yield updated
+  override def setActorName(id: ActorId, name: ActorName): ZIO[Any, RepositoryError, ActorData] =
+    (
+      for {
+        data    <- actorRepository.getById(id)
+        updated  = data.copy(name = name)
+        _       <- actorRepository.update(updated)
+      } yield updated
+    ).commit
 
-  override def removeActor(removeActor: RemoveActor): ZQuery[Any, RepositoryError, Unit] =
-    for {
-      actor <- actorRepository.getById(removeActor.id)
-      _     <- actorRepository.delete(actor)
-    } yield ()
+  override def removeActor(id: ActorId): ZIO[Any, RepositoryError, Unit] =
+    (
+      for {
+        actor <- actorRepository.getById(id)
+        _     <- actorRepository.delete(actor)
+      } yield ()
+    ).commit
 }

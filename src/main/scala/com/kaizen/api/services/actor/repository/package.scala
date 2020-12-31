@@ -1,47 +1,25 @@
 package com.kaizen.api.services.actor
 
 import com.kaizen.api.services.RepositoryError
-import zio.stm.TMap
+import zio.query.Request
+import zio.stm.{TMap, ZSTM}
 import zio.{Has, ZLayer}
-import zio.query.{DataSource, Request, ZQuery}
 
 package object repository {
   type ActorRepository     = Has[ActorRepository.Service]
-  type ActorRepositoryImpl = Has[ActorRepository.Impl]
-
-  final case class GetActorById(id: ActorId) extends Request[RepositoryError, ActorData]
-  final case class UpdateActor(movie: ActorData) extends Request[RepositoryError, Unit]
-  final case class DeleteActor(movie: ActorData) extends Request[RepositoryError, Unit]
 
   object ActorRepository {
-    class Service(impl: Impl) {
-      def getById(id: ActorId): ZQuery[Any, RepositoryError, ActorData] =
-        ZQuery.fromRequest(GetActorById(id))(impl.getById)
-
-      def update(actor: ActorData): ZQuery[Any, RepositoryError, Unit] =
-        ZQuery.fromRequest(UpdateActor(actor))(impl.update)
-
-      def delete(actor: ActorData): ZQuery[Any, RepositoryError, Unit] =
-        ZQuery.fromRequest(DeleteActor(actor))(impl.delete)
+    trait Service {
+      def getById(id: ActorId): ZSTM[Any, RepositoryError, ActorData]
+      def update(actorData: ActorData): ZSTM[Any, RepositoryError, Unit]
+      def delete(actorData: ActorData): ZSTM[Any, RepositoryError, Unit]
     }
 
-    private[repository] trait Impl {
-      val getById: DataSource[Any, GetActorById]
-      val update: DataSource[Any, UpdateActor]
-      val delete: DataSource[Any, DeleteActor]
-    }
-
-    private lazy val svc: ZLayer[ActorRepositoryImpl, Nothing, ActorRepository] =
-      ZLayer.fromService(new Service(_))
-
-    private lazy val inMemoryImpl: ZLayer[Any, Nothing, ActorRepositoryImpl] =
-      ZLayer.fromEffect(
-        TMap
-          .empty[ActorId, ActorData]
-          .map(new InMemoryActorRepository(_))
-          .commit
-      )
-
-    lazy val inMemory: ZLayer[Any, Nothing, ActorRepository] = inMemoryImpl >>> svc
+    lazy val inMemory: ZLayer[Any, Nothing, ActorRepository] =
+      TMap
+        .empty[ActorId, ActorData]
+        .map(new InMemoryActorRepository(_))
+        .commit
+        .toLayer
   }
 }

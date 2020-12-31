@@ -1,6 +1,5 @@
 package com.kaizen.api.graphql
 
-import com.kaizen.api.services.actedIn.controller._
 import com.kaizen.api.services.actor._
 
 final case class Actor(
@@ -14,13 +13,6 @@ object Actor {
     Actor(
       data.id,
       data.name,
-      { pageParams =>
-        PortfolioConnection(
-          countMoviesActedIn(CountMoviesActedIn(data.id)),
-          None,
-          None,
-          getMoviesActedIn(pageParams.count)(GetMoviesActedIn(data.id)).map(_.map(ActedIn.fromActedInData))
-        )
-      }
+      PortfolioConnection.from(data)
     )
 }

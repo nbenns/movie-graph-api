@@ -2,24 +2,25 @@ name := "movie-graph-api"
 
 version := "0.1"
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.4"
 
-addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.11.0" cross CrossVersion.full)
+addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.11.2" cross CrossVersion.full)
 addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 
 scalacOptions ++= Seq("-unchecked", "-Ymacro-annotations")
 
-val zioVersion     = "1.0.0-RC21-2"
-val calibanVersion = "0.8.3"
-val http4sVersion  = "0.21.4"
+val catsVersion    = "2.3.1"
+val zioVersion     = "1.0.3"
+val calibanVersion = "0.9.4"
+val http4sVersion  = "0.21.14"
 
 libraryDependencies ++= Seq(
-  "org.typelevel"         %% "cats-core"                 % "2.0.0",
-  "org.typelevel"         %% "cats-effect"               % "2.1.2",
+  "org.typelevel"         %% "cats-core"                 % catsVersion,
+  "org.typelevel"         %% "cats-effect"               % catsVersion,
   "dev.zio"               %% "zio"                       % zioVersion,
-  "dev.zio"               %% "zio-interop-cats"          % "2.1.3.0-RC16",
-  "dev.zio"               %% "zio-config"                % "1.0.0-RC23-1",
-  "dev.zio"               %% "zio-query"                 % "0.2.2",
+  "dev.zio"               %% "zio-interop-cats"          % "2.2.0.1",
+  "dev.zio"               %% "zio-config"                % "1.0.0-RC31-1",
+  "dev.zio"               %% "zio-query"                 % "0.2.6",
   "com.github.ghostdogpr" %% "caliban"                   % calibanVersion,
   "com.github.ghostdogpr" %% "caliban-cats"              % calibanVersion,
   "com.github.ghostdogpr" %% "caliban-http4s"            % calibanVersion,

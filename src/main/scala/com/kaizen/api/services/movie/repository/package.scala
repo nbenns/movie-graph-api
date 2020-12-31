@@ -2,64 +2,41 @@ package com.kaizen.api.services.movie
 
 import com.kaizen.api.services.RepositoryError
 import zio._
-import zio.stm.TMap
-import zio.query.{DataSource, Request, ZQuery}
+import zio.stm.{TMap, ZSTM}
 
 package object repository {
   type MovieRepository     = Has[MovieRepository.Service]
-  type MovieRepositoryImpl = Has[MovieRepository.Impl]
-
-  final case class GetMovieById(id: MovieId) extends Request[RepositoryError, MovieData]
-  final case class UpdateMovie(movie: MovieData) extends Request[RepositoryError, Unit]
-  final case class DeleteMovie(movie: MovieData) extends Request[RepositoryError, Unit]
 
   object MovieRepository {
-    class Service(impl: Impl) {
-      def getById(id: MovieId): ZQuery[Any, RepositoryError, MovieData] =
-        ZQuery.fromRequest(GetMovieById(id))(impl.getById)
-
-      def update(movie: MovieData): ZQuery[Any, RepositoryError, Unit] =
-        ZQuery.fromRequest(UpdateMovie(movie))(impl.update)
-
-      def delete(movie: MovieData): ZQuery[Any, RepositoryError, Unit] =
-        ZQuery.fromRequest(DeleteMovie(movie))(impl.delete)
+    trait Service {
+      def getById(id: MovieId): ZSTM[Any, RepositoryError, MovieData]
+      def update(movie: MovieData): ZSTM[Any, RepositoryError, Unit]
+      def delete(movie: MovieData): ZSTM[Any, RepositoryError, Unit]
     }
 
-    private[repository] trait Impl {
-      val getById: DataSource[Any, GetMovieById]
-      val update: DataSource[Any, UpdateMovie]
-      val delete: DataSource[Any, DeleteMovie]
-    }
-
-    private lazy val svc: ZLayer[MovieRepositoryImpl, Nothing, MovieRepository] =
-      ZLayer.fromService(new Service(_))
-
-    private lazy val inMemoryImpl: ZLayer[Any, Nothing, MovieRepositoryImpl] =
-      ZLayer.fromEffect(
-        TMap
-          .empty[MovieId, MovieData]
-          .map(new InMemoryMovieRepository(_))
-          .commit
-      )
-
-    lazy val inMemory: ZLayer[Any, Nothing, MovieRepository] = inMemoryImpl >>> svc
+    lazy val inMemory: ZLayer[Any, Nothing, MovieRepository] =
+      TMap
+        .empty[MovieId, MovieData]
+        .map(new InMemoryMovieRepository(_))
+        .commit
+        .toLayer
   }
 
-  def getMovieById(id: MovieId): ZQuery[MovieRepository, RepositoryError, MovieData] =
+  def getMovieById(id: MovieId): ZSTM[MovieRepository, RepositoryError, MovieData] =
     for {
-      hasMovieRepo <- ZQuery.environment[MovieRepository]
+      hasMovieRepo <- ZSTM.environment[MovieRepository]
       movie        <- hasMovieRepo.get.getById(id)
     } yield movie
 
-  def updateMovie(movie: MovieData): ZQuery[MovieRepository, RepositoryError, Unit] =
+  def updateMovie(movie: MovieData): ZSTM[MovieRepository, RepositoryError, Unit] =
     for {
-      hasMovieRepo <- ZQuery.environment[MovieRepository]
+      hasMovieRepo <- ZSTM.environment[MovieRepository]
       _            <- hasMovieRepo.get.update(movie)
     } yield ()
 
-  def deleteMovie(movie: MovieData): ZQuery[MovieRepository, RepositoryError, Unit] =
+  def deleteMovie(movie: MovieData): ZSTM[MovieRepository, RepositoryError, Unit] =
     for {
-      hasMovieRepo <- ZQuery.environment[MovieRepository]
+      hasMovieRepo <- ZSTM.environment[MovieRepository]
       _            <- hasMovieRepo.get.delete(movie)
     } yield ()
 }
